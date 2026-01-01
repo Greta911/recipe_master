@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Route;
 //PATTERN: /
 //VUE: templates/index.blade.php
 Route::get('/', function () {
-    $heroRecipe = Recipe::inRandomOrder()->first();
+    $heroRecipe = Recipe::query()->inRandomOrder()->first();
+    $allRecipes = Recipe::all();
     return view('template.index', [
-        'featuredRecipe' => $heroRecipe,
-        'recipes' => Recipe::all()
+        'heroRecipe' => $heroRecipe,
+        'allRecipes' => $allRecipes
     ]);
 })->name('home');
