@@ -41,7 +41,7 @@
                         href="{{ route('recipes._index') }}">Recettes</a>
                     <a
                         class="text-white hover:text-yellow-500 px-3 py-2"
-                        href="chefs.html">Chefs</a>
+                        href="{{ route('users.index') }}">Chefs</a>
                 </div>
             </div>
         </div>
