@@ -6,9 +6,9 @@
         <section class="relative mb-6">
             <img
                 class="w-full h-96 object-cover rounded-lg shadow-lg"
-                src="https://source.unsplash.com/1600x900/?portrait,{{ urlencode($user->name) }}"
+                src="{{ $user->picture ? asset('storage/avatars/' . $user->picture) : asset('images/default_avatar.png') }}"
                 alt="Profile de {{ $user->name }}" />
-            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-gray-900 to-transparent rounded-b-lg">
+            <div class="absolute bottom-0 left-0 w-full p-6 bg-linear-to-t from-gray-900 to-transparent rounded-b-lg">
                 <h1 class="text-3xl font-bold mb-2 text-white">
                     {{ $user->name }}
                 </h1>

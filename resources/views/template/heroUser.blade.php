@@ -1,7 +1,7 @@
 <section class="bg-gray-700 text-white rounded-lg shadow-2xl p-6 my-6 border-l-8 border-yellow-500">
     <div class="flex items-center mb-6">
         <img
-            src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=EAB308&color=1F2937&size=300"
+            src="{{ $user->picture ? asset('storage/avatars/' . $user->picture) : asset('images/default_avatar.png') }}"
             alt="{{ $user->name }}"
             class="w-24 h-24 rounded-full border-4 border-yellow-500 mr-4 object-cover" />
 
