@@ -17,11 +17,11 @@ Route::get('/', function () {
 })->name('home');
 
 //ROUTE LISTE DES RECETTES
-//PATTERN: /index
+//PATTERN: /recipes
 //VUE: templates/recipes/index.blade.php
 
 Route::get('/recipes', function () {
-    $recipes = Recipe::limit(9)->get();
+    $recipes = Recipe::withCount('comments')->paginate(9);
     return view('template.recipes._index', [
         'recipes' => $recipes
     ]);
@@ -32,16 +32,16 @@ Route::get('/recipes', function () {
 //VUE: templates/recipes/show.blade.php
 
 Route::get('/recipes/{id}', function ($id) {
-    $recipe = Recipe::findOrFail($id);
+    $recipe = Recipe::with(['ingredients', 'user', 'comments'])->findOrFail($id);
     return view('template.recipes.show', compact('recipe'));
 })->name('recipes.show');
 
 //ROUTE LISTE DES USERS
-//PATTERN: /index
+//PATTERN: /users
 //VUE: templates/users/index.blade.php
 
 Route::get('/users', function () {
-    $users = User::with('recipes')->get();
+    $users = User::withCount('recipes')->paginate(9);
     return view('template.users.index', compact('users'));
 })->name('users.index');
 

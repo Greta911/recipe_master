@@ -16,7 +16,8 @@
             <p class="text-gray-600">{{ Str::limit($recipe->description,100, '...') }}</p>
             <div class="flex items-center mt-4">
                 <span class="text-gray-700 mr-2">{{ $recipe->user->name }}</span>
-                <span class="text-gray-500"><i class="fas fa-comment"></i> 8 commentaires</span>
+                <span class="text-gray-500"><i class="fas fa-comment"></i> {{ $recipe->comments_count ?? $recipe->comments->count() }}
+                    {{ Str::plural('commentaire', $recipe->comments_count ?? $recipe->comments->count()) }}</span>
             </div>
             <a
                 href="{{ route('recipes.show', $recipe->id) }}"
