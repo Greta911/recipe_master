@@ -6,7 +6,7 @@
         <!-- Recipe Image -->
         <img
             class="w-full h-96 object-cover rounded-t-lg"
-            src="https://source.unsplash.com/1600x900/?recipe"
+            src="{{ $recipe->picture ?? 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80' }}"
             alt="Nom de la recette" />
 
         <!-- Recipe Info -->

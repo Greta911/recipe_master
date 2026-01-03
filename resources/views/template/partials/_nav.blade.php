@@ -32,10 +32,16 @@
                     </button>
                 </div>
                 <div class="hidden md:flex items-center space-x-4">
-                    <input
-                        type="text"
-                        placeholder="Rechercher une recette..."
-                        class="p-2 rounded-md" />
+                    <div class="relative items-center flex">
+                        <span class="absolute left-3 text-gray-400">
+                            <i class="fas fa-search text-sm"></i>
+                        </span>
+                        <input
+                            type="text"
+                            placeholder="Rechercher..."
+                            class="pl-10 pr-4 py-2 rounded-full bg-gray-700 bg-opacity-50 border border-gray-600 text-white placeholder-gray-400 focus:bg-white focus:text-gray-900 focus:ring-2 focus:ring-yellow-500 outline-none transition-all w-48 focus:w-64"
+                            @input="$dispatch('search-updated', { query: $event.target.value })" />
+                    </div>
                     <a
                         class="text-white hover:text-yellow-500 px-3 py-2"
                         href="{{ route('recipes._index') }}">Recettes</a>
@@ -49,7 +55,8 @@
             <input
                 type="text"
                 placeholder="Rechercher une recette..."
-                class="p-2 w-full" />
+                class="p-2 w-full text-gray-400 outline-none"
+                @input="$dispatch('search-updated', { query: $event.target.value })" />
             <a class="block text-white hover:text-yellow-500 px-3 py-2" href="#">Recettes</a>
             <a class="block text-white hover:text-yellow-500 px-3 py-2" href="#">Chefs</a>
         </div>

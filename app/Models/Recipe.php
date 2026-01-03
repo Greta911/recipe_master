@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Recipe extends Model
@@ -42,5 +43,10 @@ class Recipe extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'dish_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'type_id');
     }
 }

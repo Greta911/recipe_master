@@ -2,17 +2,33 @@
 
 use App\Models\Recipe;
 use App\Models\User;
+use App\Http\Controllers\RecipeController;
 use Illuminate\Support\Facades\Route;
 
 //ROUTE PAR DEFAUT
 //PATTERN: /
-//VUE: templates/app.blade.php
+//VUE: templates/recipes/index.blade.php
 Route::get('/', function () {
-    $heroRecipe = Recipe::inRandomOrder()->first();
-    $recipes = Recipe::orderByDesc('average_rating')->limit(3)->get();
+    $heroRecipe = Recipe::with(['user', 'comments'])
+        ->withCount('comments')
+        ->inRandomOrder()
+        ->first();
+    $popularRecipes = Recipe::with(['user'])
+        ->withCount('comments')
+        ->orderByDesc('average_rating')
+        ->limit(3)
+        ->get();
+    $heroUser = User::withCount('recipes')
+        ->has('recipes')
+        ->with(['recipes'])
+        ->get()
+        ->sortByDesc(function ($user) {
+            return $user->recipes->avg('average_rating');
+        })->first();
     return view('template.recipes.index', [
         'heroRecipe' => $heroRecipe,
-        'recipes' => $recipes
+        'popularRecipes' => $popularRecipes,
+        'heroUser' => $heroUser
     ]);
 })->name('home');
 
@@ -21,10 +37,8 @@ Route::get('/', function () {
 //VUE: templates/recipes/index.blade.php
 
 Route::get('/recipes', function () {
-    $recipes = Recipe::withCount('comments')->paginate(9);
-    return view('template.recipes._index', [
-        'recipes' => $recipes
-    ]);
+    // On retourne la vue sans passer la variable $recipes
+    return view('template.recipes._index');
 })->name('recipes._index');
 
 //ROUTE DETAIL D'UNE RECETTE

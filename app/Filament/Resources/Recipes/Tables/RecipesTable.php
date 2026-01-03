@@ -36,7 +36,8 @@ class RecipesTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('user.name')
                     ->searchable(),
-                TextColumn::make('type_id')
+                TextColumn::make('category.name')
+                    ->label('Category')
                     ->numeric()
                     ->sortable(),
             ])

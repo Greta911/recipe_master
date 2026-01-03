@@ -1,30 +1,31 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <!-- Recipe Card -->
-    @foreach ($recipes as $recipe )
-    <article
-        class="bg-white rounded-lg overflow-hidden shadow-lg relative">
-        <img
-            class="w-full h-48 object-cover"
-            src="https://source.unsplash.com/480x360/?recipe"
-            alt="Recipe Image" />
-        <div class="p-4">
-            <h3 class="text-xl font-bold mb-2">{{ $recipe->name }}</h3>
-            <div class="flex items-center mb-2">
-                <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                <span>{{ number_format($recipe->average_rating, 1)}}</span>
+<!-- Recipe Card -->
+{{-- On ajoute wire:key --}}
+
+<article wire:key="recipe-{{ $recipe->id }}" class="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-full">
+    <img class="w-full h-56 object-cover"
+        src="{{ Str::startsWith($recipe->picture, ['http://', 'https://']) ? $recipe->picture : asset('storage/' . $recipe->picture) }}"
+        alt="{{ $recipe->name }}" />
+
+    <div class="p-5 flex flex-col grow">
+        <h3 class="text-xl font-bold mb-2 text-gray-800">{{ $recipe->name }}</h3>
+
+        <p class="text-gray-600 text-sm mb-4 grow">
+            {{ Str::limit($recipe->description, 100, '...') }}
+        </p>
+        <div class="flex items-center mb-4">
+            <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+            <span class="text-gray-800">{{ number_format($recipe->average_rating ?? 0, 1) }}</span>
+        </div>
+        <div class="border-t pt-4 mt-auto">
+            <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
+                <span><strong>Chef:</strong> {{ $recipe->user->name }}</span>
+                <span><i class="fas fa-comment"></i> {{ $recipe->comments_count }}</span>
             </div>
-            <p class="text-gray-600">{{ Str::limit($recipe->description,100, '...') }}</p>
-            <div class="flex items-center mt-4">
-                <span class="text-gray-700 mr-2">{{ $recipe->user->name }}</span>
-                <span class="text-gray-500"><i class="fas fa-comment"></i> {{ $recipe->comments_count ?? $recipe->comments->count() }}
-                    {{ Str::plural('commentaire', $recipe->comments_count ?? $recipe->comments->count()) }}</span>
-            </div>
-            <a
-                href="{{ route('recipes.show', $recipe->id) }}"
-                class="inline-block mt-4 bg-red-500 hover:bg-red-800 rounded-full px-4 py-2 text-white">
+
+            <a href="{{ route('recipes.show', $recipe->id) }}"
+                class="block text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
                 Voir la recette
             </a>
         </div>
-    </article>
-    @endforeach
-</div>
+    </div>
+</article>
