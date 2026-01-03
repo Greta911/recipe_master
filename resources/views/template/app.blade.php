@@ -5,6 +5,7 @@
 
 <body
     class="bg-gray-100 text-gray-800 font-sans leading-normal tracking-normal">
+    @livewireScriptConfig
     <!-- Header -->
     @include('template.partials._nav')
 
