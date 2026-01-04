@@ -11,29 +11,38 @@ class RecipeList extends Component
 {
     use WithPagination;
 
-    protected $queryString = ['search'];
+
+    #[Url(history: true)]
     public $search = '';
+
+    #[Url(history: true)]
+    public $category = '';
+
+    #[Url(history: true)]
+    public $ingredient = '';
+
     public $perPage = 9;
 
     public function loadMore()
     {
         $this->perPage += 9;
     }
+
     public function render()
     {
-        // 1. On commence la requête avec les relations
+        $categories = \App\Models\Category::all();
+        $ingredients = \App\Models\Ingredient::has('recipes')->take(15)->get();
+
         $query = Recipe::query()
             ->with(['user', 'ingredients'])
             ->withCount('comments');
 
-        // 2. On applique la recherche multi-mots si elle n'est pas vide
+        // 1. Filtre Recherche
         if (!empty($this->search)) {
             $words = explode(' ', $this->search);
-
             foreach ($words as $word) {
                 $word = trim($word);
                 if ($word == "") continue;
-
                 $query->where(function ($q) use ($word) {
                     $q->where('name', 'like', "%{$word}%")
                         ->orWhere('description', 'like', "%{$word}%")
@@ -44,17 +53,39 @@ class RecipeList extends Component
             }
         }
 
-        // 3. Pagination et tri
+        // 2. Filtre Catégorie
+        if (!empty($this->category)) {
+            $query->where('type_id', $this->category);
+        }
+
+        // 3. Filtre Ingrédient
+        if (!empty($this->ingredient)) {
+            $query->whereHas('ingredients', function ($q) {
+                // On précise la table pour éviter les colonnes ambiguës
+                $q->where('ingredients.id', $this->ingredient);
+            });
+        }
+
         $recipes = $query->latest()->paginate($this->perPage);
 
         return view('livewire.recipe-list', [
             'recipes' => $recipes,
+            'categories' => $categories,
+            'ingredients' => $ingredients,
             'hasMore' => $recipes->hasMorePages(),
         ]);
     }
 
-    // Optionnel : Réinitialise la page quand on tape une nouvelle recherche
+    // Réinitialise la page si l'un des filtres change
     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatedCategory()
+    {
+        $this->resetPage();
+    }
+    public function updatedIngredient()
     {
         $this->resetPage();
     }

@@ -15,4 +15,5 @@
         }
     </style>
     @livewireStyles
+
 </head>

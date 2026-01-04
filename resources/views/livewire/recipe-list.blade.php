@@ -1,5 +1,6 @@
 {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
 
+
 <div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @foreach ($recipes as $recipe)
@@ -18,4 +19,5 @@
         </button>
     </div>
     @endif
+</div>
 </div>

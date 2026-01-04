@@ -20,7 +20,9 @@ class UserForm
                     ->required(),
                 TextInput::make('password')
                     ->password()
-                    ->required(),
+                    ->required(fn(string $context): bool => $context === 'create') // Obligatoire seulement à la création
+                    ->dehydrated(fn($state) => filled($state)) // Ne sauvegarde que s'il est rempli
+                    ->label('Mot de passe'),
                 Textarea::make('biography')
                     ->columnSpanFull(),
                 TextInput::make('picture'),

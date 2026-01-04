@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->share('categories', \App\Models\Category::all());
+        view()->share('ingredients', \App\Models\Ingredient::has('recipes')->take(15)->get());
     }
 }

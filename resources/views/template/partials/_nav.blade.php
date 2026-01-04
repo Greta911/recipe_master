@@ -54,13 +54,15 @@
             </div>
         </div>
         <div x-show="open" class="md:hidden bg-gray-700">
-            <input
-                type="text"
-                placeholder="Rechercher une recette..."
-                class="p-2 w-full text-gray-400 outline-none"
-                @input="$dispatch('search-updated', { query: $event.target.value })" />
-            <a class="block text-white hover:text-yellow-500 px-3 py-2" href="#">Recettes</a>
-            <a class="block text-white hover:text-yellow-500 px-3 py-2" href="#">Chefs</a>
+            <form action="{{ route('recipes._index') }}" method="GET">
+                <input class="pl-10 pr-4 py-2 w-full rounded bg-gray-600 text-white outline-none focus:ring-2 focus:ring-yellow-500"
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Rechercher..." />
+            </form>
+            <a class="block text-white hover:text-yellow-500 px-3 py-2" href="{{ route('recipes._index') }}">Recettes</a>
+            <a class="block text-white hover:text-yellow-500 px-3 py-2" href="{{ route('users.index') }}">Chefs</a>
         </div>
     </nav>
 </div>

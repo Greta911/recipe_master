@@ -6,7 +6,7 @@
         <!-- Recipe Image -->
         <img
             class="w-full h-96 object-cover rounded-t-lg"
-            src="{{ $recipe->picture ?? 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80' }}"
+            src="{{ Str::startsWith($recipe->picture, ['http://', 'https://']) ? $recipe->picture : asset('storage/' . $recipe->picture) }}"
             alt="Nom de la recette" />
 
         <!-- Recipe Info -->
@@ -14,11 +14,12 @@
             <h1 class="text-3xl font-bold mb-4">{{ $recipe->name }}</h1>
             <div class="flex items-center mb-4">
                 <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                <span>4.9</span>
-                <span class="ml-4 text-gray-700"><i class="fas fa-clock"></i> 45 minutes</span>
+                <span>{{ number_format($recipe->average_rating ?? 0, 1) }}</span>
+                <span class="ml-4 text-gray-700"><i class="fas fa-clock"></i> {{ $recipe->prep_time }}</span>
+                <span class="ml-4 text-gray-700"><i class="fas fa-utensils"></i> {{ $recipe->portions }} pers.</span>
             </div>
             <p class="text-gray-700 mb-4">
-                {{ $recipe->description }}
+                {{ Str::limit($recipe->description, 150, '...') }}
             </p>
             <div class="flex items-center mb-4">
                 <span class="text-gray-700 mr-2">{{ $recipe->user->name }}</span>
@@ -40,13 +41,21 @@
         <!-- Steps -->
         <div class="p-4 border-t">
             <h2 class="text-2xl font-bold mb-4">Étapes</h2>
-            <ol class="list-decimal pl-5">
-                <li>Préchauffez le four à 180°C.</li>
-                <li>Dans un saladier, mélangez la farine et le sucre.</li>
-                <li>
-                    Ajoutez les œufs un à un en mélangeant bien entre chaque ajout.
+            <ol class="list-decimal pl-5 space-y-4">
+                @php
+                // On essaie d'abord de couper par ligne, sinon par point
+                $steps = str_contains($recipe->description, "\n")
+                ? explode("\n", $recipe->description)
+                : explode(".", $recipe->description);
+                @endphp
+
+                @foreach($steps as $step)
+                @if(strlen(trim($step)) > 5) {{-- Évite les petits morceaux vides --}}
+                <li class="text-gray-700 leading-relaxed">
+                    {{ ucfirst(trim($step)) }}{{ !str_ends_with(trim($step), '.') ? '.' : '' }}
                 </li>
-                <!-- ... (autres étapes) ... -->
+                @endif
+                @endforeach
             </ol>
         </div>
 
